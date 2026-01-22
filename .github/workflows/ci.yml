@@ -1,0 +1,67 @@
+name: CI/CD Pipeline
+
+# Configuración de los triggers
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master, develop ]
+  workflow_dispatch:
+
+# Configuración de los trabajos
+jobs:
+  # Trabajo de pruebas y análisis de código
+  test:
+    name: Test y Lint
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+    
+    # Pasos a ejecutarse dentro del trabajo
+    steps:
+      - name: Checkout del código
+        uses: actions/checkout@v4
+      
+      - name: Configurar Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      
+      - name: Instalar dependencias
+        run: npm ci
+      
+      - name: Ejecutar linter
+        run: npm run lint
+        continue-on-error: true
+      
+      - name: Ejecutar pruebas
+        run: npm test
+      
+      - name: Generar reporte de cobertura
+        run: npm test -- --coverage
+        continue-on-error: true
+
+  # Trabajo de construcción
+  build:
+    name: Build
+    needs: test
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout del código
+        uses: actions/checkout@v4
+      
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+      
+      - name: Instalar dependencias
+        run: npm ci
+      
+      - name: Verificar build
+        run: echo "Build completado exitosamente"

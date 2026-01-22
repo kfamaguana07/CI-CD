@@ -31,5 +31,5 @@ function fibonacci(n) {
   return b;
 }
 
-module.exports = { factorial, fibonacci };
+export { factorial, fibonacci };
 

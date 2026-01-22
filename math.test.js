@@ -1,4 +1,4 @@
-const { factorial, fibonacci } = require('./math');
+import { factorial, fibonacci } from './math.js';
 
 describe('factorial', () => {
   test('factorial de 0 debe ser 1', () => {

@@ -10,7 +10,7 @@ describe('factorial', () => {
   });
 
   test('factorial de 5 debe ser 120', () => {
-    expect(factorial(5)).toBe(100);
+    expect(factorial(5)).toBe(120);
   });
 
   test('factorial de 10 debe ser 3628800', () => {
